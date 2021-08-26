@@ -68,7 +68,21 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].last[:attributes][:created_at]).to eq("2021-05-01T00:00:00.000Z")
     end
 
-    it 'returns recipient\'s last 30 days of messages from a given sender'
+    it 'returns recipient\'s last 30 days of messages from a given sender' do
+      limit = "30d"
+      get "/api/v1/messages?recipient_id=#{@recipient_id}&sender_id=#{@sender_a_id}&limit=#{limit}"
+
+      output = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(output[:data].length).to eq(25)
+      expect(output[:data].first[:type]).to eq("message")
+      expect(output[:data].first[:attributes][:sender_id]).to eq(@sender_a_id)
+      expect(output[:data].first[:attributes][:created_at]).to eq("2021-08-15T00:00:00.000Z")
+      expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_a_id)
+      expect(output[:data].last[:attributes][:created_at]).to eq("2021-08-15T00:00:00.000Z")
+    end
+
     it 'returns recipient\'s last 100 messages from all senders if non specified'
     it 'returns recipient\'s last 30 days of messages from all senders if non specified'
   end
