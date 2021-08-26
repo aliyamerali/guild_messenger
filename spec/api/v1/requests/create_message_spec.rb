@@ -28,6 +28,14 @@ RSpec.describe 'Create Message Endpoint' do
   end
 
   describe 'sad path' do
-    it 'returns a 400 response when all required fields are not present'
+    it 'returns a 400 response when all required fields are not present' do
+      recipient_id = 5678
+      content = "About a thing"
+      body = {"recipient_id": recipient_id, "content": content}
+
+      post '/api/v1/messages', params: body, as: :json
+
+      expect(response.status).to eq(400)
+    end
   end
 end
