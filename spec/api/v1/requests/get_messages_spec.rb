@@ -13,7 +13,7 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
                       recipient_id: @recipient_id,
                       sender_id: @sender_a_id,
                       content: "Message #{index}",
-                      created_at: DateTime.new(2021,5,01)
+                      created_at: DateTime.new(2020,5,01)
                       )
       end
 
@@ -23,7 +23,7 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
                       recipient_id: @recipient_id,
                       sender_id: @sender_a_id,
                       content: "Message #{index}",
-                      created_at: DateTime.new(2021,7,01)
+                      created_at: DateTime.new(2020,7,01)
                       )
       end
 
@@ -33,24 +33,24 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
                       recipient_id: @recipient_id,
                       sender_id: @sender_a_id,
                       content: "Message #{index}",
-                      created_at: DateTime.new(2021,8,15)
+                      created_at: DateTime.new(2020,8,15)
                       )
       end
 
-      # 25 messages from sender B within 30 days
+      # 50 messages from sender B within 30 days
       50.times do |index|
         Message.create!(
                       recipient_id: @recipient_id,
                       sender_id: @sender_b_id,
                       content: "Message #{index}",
-                      created_at: DateTime.new(2021,8,15)
+                      created_at: DateTime.new(2020,7,21)
                       )
       end
 
-      # # stub out Time.now to return 8/20/21
-      # allow(Time).to receive(:now) do
-      #   DateTime.new(2021,8,20)
-      # end
+      # stub out Time.now to return 8/20/21
+      allow(DateTime).to receive(:now) do
+        DateTime.new(2020,8,20)
+      end
     end
 
     it 'returns recipient\'s last 100 messages from a given sender' do
@@ -63,9 +63,9 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].length).to eq(100)
       expect(output[:data].first[:type]).to eq("message")
       expect(output[:data].first[:attributes][:sender_id]).to eq(@sender_a_id)
-      expect(output[:data].first[:attributes][:created_at]).to eq("2021-08-15T00:00:00.000Z")
+      expect(output[:data].first[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
       expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_a_id)
-      expect(output[:data].last[:attributes][:created_at]).to eq("2021-05-01T00:00:00.000Z")
+      expect(output[:data].last[:attributes][:created_at]).to eq("2020-05-01T00:00:00.000Z")
     end
 
     it 'returns recipient\'s last 30 days of messages from a given sender' do
@@ -78,9 +78,9 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].length).to eq(25)
       expect(output[:data].first[:type]).to eq("message")
       expect(output[:data].first[:attributes][:sender_id]).to eq(@sender_a_id)
-      expect(output[:data].first[:attributes][:created_at]).to eq("2021-08-15T00:00:00.000Z")
+      expect(output[:data].first[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
       expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_a_id)
-      expect(output[:data].last[:attributes][:created_at]).to eq("2021-08-15T00:00:00.000Z")
+      expect(output[:data].last[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
     end
 
     it 'returns recipient\'s last 100 messages from all senders if non specified'
