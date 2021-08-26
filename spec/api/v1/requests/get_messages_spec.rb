@@ -111,8 +111,8 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].first[:type]).to eq("message")
       expect(output[:data].first[:attributes][:sender_id]).to eq(@sender_a_id)
       expect(output[:data].first[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
-      expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_a_id)
-      expect(output[:data].last[:attributes][:created_at]).to eq("2020-07-01T00:00:00.000Z")
+      expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_b_id)
+      expect(output[:data].last[:attributes][:created_at]).to eq("2020-07-21T00:00:00.000Z")
     end
   end
 
