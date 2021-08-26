@@ -4,35 +4,16 @@ class Api::V1::MessagesController < ApplicationController
     sender_id = params[:sender_id]
     limit = params[:limit]
 
-    if recipient_id && sender_id && limit
-      if limit == "100"
-        messages = Message.where(recipient_id: recipient_id, sender_id: sender_id)
-                 .order('created_at DESC')
-                 .limit(limit)
-        render json: MessageSerializer.new(messages)
-      else
-        messages = Message
-                  .where(recipient_id: recipient_id, sender_id: sender_id)
-                  .where('created_at >= ?', (DateTime.now - 30))
-                  .order('created_at DESC')
-        render json: MessageSerializer.new(messages)
-      end
-    elsif recipient_id && limit
-      if limit == "100"
-        messages = Message.where(recipient_id: recipient_id)
-                 .order('created_at DESC')
-                 .limit(limit)
-        render json: MessageSerializer.new(messages)
-      else
-        messages = Message
-                  .where(recipient_id: recipient_id)
-                  .where('created_at >= ?', (DateTime.now - 30))
-                  .order('created_at DESC')
-        render json: MessageSerializer.new(messages)
-      end
+    if sender_id
+      messages = Message.from_sender(recipient_id, sender_id, limit)
     else
-      render json: { response: 'Bad Request'}, status: :bad_request
+      messages = Message.from_all_senders(recipient_id, limit)
     end
+
+    render json: MessageSerializer.new(messages)
+    # else
+    #   render json: { response: 'Bad Request'}, status: :bad_request
+    # end
   end
 
   def create
