@@ -83,8 +83,37 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].last[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
     end
 
-    it 'returns recipient\'s last 100 messages from all senders if non specified'
-    it 'returns recipient\'s last 30 days of messages from all senders if non specified'
+    it 'returns recipient\'s last 100 messages from all senders if non specified' do
+      limit = "100"
+      get "/api/v1/messages?recipient_id=#{@recipient_id}&limit=#{limit}"
+
+      output = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(output[:data].length).to eq(100)
+      expect(output[:data].first[:type]).to eq("message")
+      expect(output[:data].first[:attributes][:sender_id]).to eq(@sender_a_id)
+      expect(output[:data].first[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
+      expect(output[:data][50][:attributes][:sender_id]).to eq(@sender_b_id)
+      expect(output[:data][50][:attributes][:created_at]).to eq("2020-07-21T00:00:00.000Z")
+      expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_a_id)
+      expect(output[:data].last[:attributes][:created_at]).to eq("2020-07-01T00:00:00.000Z")
+    end
+
+    it 'returns recipient\'s last 30 days of messages from all senders if non specified' do
+      limit = "30d"
+      get "/api/v1/messages?recipient_id=#{@recipient_id}&limit=#{limit}"
+
+      output = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(output[:data].length).to eq(75)
+      expect(output[:data].first[:type]).to eq("message")
+      expect(output[:data].first[:attributes][:sender_id]).to eq(@sender_a_id)
+      expect(output[:data].first[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
+      expect(output[:data].last[:attributes][:sender_id]).to eq(@sender_a_id)
+      expect(output[:data].last[:attributes][:created_at]).to eq("2020-07-01T00:00:00.000Z")
+    end
   end
 
 end
