@@ -6,7 +6,7 @@ class Message < ApplicationRecord
       Message.where(recipient_id: recipient_id)
              .order('created_at DESC')
              .limit(limit)
-    else
+    elsif limit == "30d"
       Message.where(recipient_id: recipient_id)
              .where('created_at >= ?', (DateTime.now - 30))
              .order('created_at DESC')
@@ -18,7 +18,7 @@ class Message < ApplicationRecord
       Message.where(recipient_id: recipient_id, sender_id: sender_id)
              .order('created_at DESC')
              .limit(limit)
-    else
+    elsif limit == "30d"
       Message.where(recipient_id: recipient_id, sender_id: sender_id)
              .where('created_at >= ?', (DateTime.now - 30))
              .order('created_at DESC')

@@ -83,7 +83,7 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].last[:attributes][:created_at]).to eq("2020-08-15T00:00:00.000Z")
     end
 
-    it 'returns recipient\'s last 100 messages from all senders if non specified' do
+    it 'returns recipient\'s last 100 messages from all senders if none specified' do
       limit = "100"
       get "/api/v1/messages?recipient_id=#{@recipient_id}&limit=#{limit}"
 
@@ -100,7 +100,7 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
       expect(output[:data].last[:attributes][:created_at]).to eq("2020-07-01T00:00:00.000Z")
     end
 
-    it 'returns recipient\'s last 30 days of messages from all senders if non specified' do
+    it 'returns recipient\'s last 30 days of messages from all senders if none specified' do
       limit = "30d"
       get "/api/v1/messages?recipient_id=#{@recipient_id}&limit=#{limit}"
 
@@ -137,6 +137,7 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
 
       expect(response.status).to eq(400)
     end
+
     it 'returns error if limit parameter is invalid' do
       invalid_limit = "string_val"
       get "/api/v1/messages?recipient_id=#{@recipient_id}&limit=#{invalid_limit}"
