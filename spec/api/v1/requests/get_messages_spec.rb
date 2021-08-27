@@ -116,4 +116,32 @@ RSpec.describe 'Get User\'s Messages Endpoint' do
     end
   end
 
+  describe 'sad path' do
+    it 'returns error if recipient_id parameter is missing' do
+      limit = "100"
+      get "/api/v1/messages?limit=#{limit}"
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'returns error if recipient_id parameter is invalid' do
+      limit = "100"
+      invalid_recipient_id = "string_val"
+      get "/api/v1/messages?recipient_id=#{invalid_recipient_id}&limit=#{limit}"
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'returns error if limit parameter is missing' do
+      get "/api/v1/messages?recipient_id=#{@recipient_id}"
+
+      expect(response.status).to eq(400)
+    end
+    it 'returns error if limit parameter is invalid' do
+      invalid_limit = "string_val"
+      get "/api/v1/messages?recipient_id=#{@recipient_id}&limit=#{invalid_limit}"
+
+      expect(response.status).to eq(400)
+    end
+  end
 end
